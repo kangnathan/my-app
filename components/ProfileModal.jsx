@@ -61,19 +61,19 @@ const ProfileModal = ({ open, onClose, userName, onUserNameChange }) => {
 
   return (
     <>
-      <Dialog 
-        open={open} 
-        onClose={onClose} 
-        PaperProps={{ style: { borderRadius: 15, padding: '20px', textAlign: 'center' } }}
+      <Dialog
+        open={open}
+        onClose={onClose}
+        PaperProps={{ sx: { borderRadius: 2, p: 2, textAlign: 'center' } }}
       >
         <DialogTitle>
-          <Typography variant="h5" style={{ fontWeight: 'bold' }}>
+          <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
             Edit Profile
           </Typography>
           <IconButton
             aria-label="close"
             onClick={onClose}
-            style={{
+            sx={{
               position: 'absolute',
               right: 8,
               top: 8,
@@ -96,8 +96,17 @@ const ProfileModal = ({ open, onClose, userName, onUserNameChange }) => {
             />
           </Box>
         </DialogContent>
-        <DialogActions style={{ justifyContent: 'center' }}>
-          <Button onClick={handleSave} variant="contained" style={{ backgroundColor: '#BB86FC', color: 'white', borderRadius: '8px', padding: '8px 16px' }}>
+        <DialogActions sx={{ justifyContent: 'center' }}>
+          <Button
+            onClick={handleSave}
+            variant="contained"
+            sx={{
+              backgroundColor: '#BB86FC',
+              color: 'white',
+              borderRadius: '8px',
+              padding: '8px 16px',
+            }}
+          >
             Save
           </Button>
         </DialogActions>
@@ -108,9 +117,9 @@ const ProfileModal = ({ open, onClose, userName, onUserNameChange }) => {
         onClose={handleSnackbarClose}
         TransitionComponent={Slide}
       >
-        <MuiAlert 
-          onClose={handleSnackbarClose} 
-          severity={snackbarSeverity} 
+        <MuiAlert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
           variant="filled"
           sx={{ width: '100%' }}
         >

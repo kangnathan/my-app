@@ -11,13 +11,13 @@ import {
   InputAdornment,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useRouter } from "next/navigation"; // Import useRouter
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
   const [formState, setFormState] = useState({ errors: {}, success: null });
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter(); // Initialize the router
+  const router = useRouter();
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -49,29 +49,31 @@ export default function RegisterForm() {
 
       if (response.ok) {
         setFormState({ success: "Account created successfully!", errors: {} });
-
-        // Add a delay before redirecting
         setTimeout(() => {
           router.push("/login");
-        }, 1500); // Delay of 1.5 seconds
+        }, 1500);
       } else {
         setFormState({ errors: result.errors || { global: "An error occurred" }, success: null });
       }
-    } catch (error) {
+    } catch {
       setFormState({ errors: { global: "Something went wrong." }, success: null });
     } finally {
       setLoading(false);
     }
   };
 
-  // Function to get the first error message
   const getFirstError = () => {
     const { errors } = formState;
-    if (errors.global) return errors.global;
-    if (errors.name) return errors.name;
-    if (errors.email) return errors.email;
-    if (errors.password) return errors.password;
-    return null;
+    return errors.global || errors.name || errors.email || errors.password || null;
+  };
+
+  const textFieldStyles = {
+    borderRadius: "5%",
+    backgroundColor: "#F0F0F0",
+    "& .MuiInputBase-input": { color: "#050505" },
+    "& .MuiOutlinedInput-notchedOutline": { borderColor: "#F0F0F0" },
+    "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#F0F0F0" },
+    "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "#F0F0F0" },
   };
 
   return (
@@ -88,14 +90,7 @@ export default function RegisterForm() {
             label="Username"
             autoComplete="off"
             variant="outlined"
-            sx={{
-              borderRadius: "5%",
-              backgroundColor: "#F0F0F0",
-              "& .MuiInputBase-input": { color: "#050505" },
-              "& .MuiOutlinedInput-notchedOutline": { borderColor: "#F0F0F0" },
-              "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#F0F0F0" },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "#F0F0F0" },
-            }}
+            sx={textFieldStyles}
           />
         </Box>
 
@@ -106,14 +101,7 @@ export default function RegisterForm() {
             label="Email"
             autoComplete="off"
             variant="outlined"
-            sx={{
-              borderRadius: "5%",
-              backgroundColor: "#F0F0F0",
-              "& .MuiInputBase-input": { color: "#050505" },
-              "& .MuiOutlinedInput-notchedOutline": { borderColor: "#F0F0F0" },
-              "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#F0F0F0" },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "#F0F0F0" },
-            }}
+            sx={textFieldStyles}
           />
         </Box>
 
@@ -125,14 +113,7 @@ export default function RegisterForm() {
             autoComplete="off"
             type={showPassword ? "text" : "password"}
             variant="outlined"
-            sx={{
-              borderRadius: "5%",
-              backgroundColor: "#F0F0F0",
-              "& .MuiInputBase-input": { color: "#050505" },
-              "& .MuiOutlinedInput-notchedOutline": { borderColor: "#F0F0F0" },
-              "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#F0F0F0" },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "#F0F0F0" },
-            }}
+            sx={textFieldStyles}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -159,14 +140,12 @@ export default function RegisterForm() {
           {loading ? "Creating Account..." : "Create Account"}
         </Button>
 
-        {/* Display the first alert below the submit button */}
         <Box mt={2}>
           {getFirstError() && (
             <Alert variant="filled" severity="warning">
               {getFirstError()}
             </Alert>
           )}
-
           {formState.success && (
             <Alert variant="filled" severity="success">
               {formState.success}

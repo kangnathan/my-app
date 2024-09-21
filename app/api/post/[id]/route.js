@@ -5,7 +5,7 @@ import { cookies } from 'next/headers';
 
 const prisma = new PrismaClient();
 
-// Authentication helper function
+// authentication helper function
 async function authenticateUser() {
     const cookie = cookies().get("mycrudapp");
     const token = cookie ? cookie.value : null;
@@ -27,7 +27,7 @@ async function authenticateUser() {
 }
 
 export async function GET(req, { params }) {
-    const { id } = params; // Get the ID from the route parameters
+    const { id } = params; // to get the ID from the route parameters
     const authResult = await authenticateUser();
 
     if (!authResult.success) {

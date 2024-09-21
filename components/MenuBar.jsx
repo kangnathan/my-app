@@ -28,7 +28,6 @@ export default function MenuBar() {
         console.error('Failed to fetch user name:', error);
       }
     };
-
     fetchUserName();
   }, []);
 
@@ -51,7 +50,6 @@ export default function MenuBar() {
 
   const handleUserNameChange = (newUserName) => {
     setUserName(newUserName);
-    // Optionally, send this change to the server
   };
 
   const handleLogout = async () => {
@@ -81,7 +79,7 @@ export default function MenuBar() {
         >
           Quick<span style={{ color: '#BB86FC' }}>CRUD</span>
         </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', marginRight:'40px' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', marginRight: '40px' }}>
           {userName && (
             <Typography
               variant="body1"
@@ -109,24 +107,24 @@ export default function MenuBar() {
               id="menu-appbar"
               anchorEl={anchorEl}
               anchorOrigin={{
-                vertical: 'bottom', // Position menu below the avatar
-                horizontal: 'left',  // Align to the left of the avatar
+                vertical: 'bottom',
+                horizontal: 'left',
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',    // Align top of menu to the bottom of the avatar
-                horizontal: 'left',  // Align to the left of the menu
+                vertical: 'top',
+                horizontal: 'left',
               }}
               open={Boolean(anchorEl)}
               onClose={handleClose}
               sx={{ mt: 1 }}
             >
-              <MenuItem onClick={handleProfileOpen}                 sx={{
-                  '&:hover': {
-                    backgroundColor: '#BB86FC',
-                    color: 'white',
-                  },
-                }}>Profile</MenuItem>
+              <MenuItem onClick={handleProfileOpen} sx={{
+                '&:hover': {
+                  backgroundColor: '#BB86FC',
+                  color: 'white',
+                },
+              }}>Profile</MenuItem>
               <MenuItem
                 onClick={handleLogout}
                 sx={{

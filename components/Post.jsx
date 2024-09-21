@@ -23,7 +23,7 @@ const Post = ({ post, refetchPosts }) => {
         content: editedPost.content,
       });
       setEditing(false);
-      handleClose(); // Close the modal after saving
+      handleClose();
       if (refetchPosts) refetchPosts(); 
     } catch (error) {
       console.error('Failed to save post:', error);
@@ -39,7 +39,7 @@ const Post = ({ post, refetchPosts }) => {
       await axios.delete(`/api/post/${post.id}`);
       setDeleteDialogOpen(false);
       handleClose();
-      if (refetchPosts) refetchPosts(post.id); // Remove post from parent state
+      if (refetchPosts) refetchPosts(post.id);
     } catch (error) {
       console.error('Failed to delete post:', error);
     }
@@ -53,7 +53,7 @@ const Post = ({ post, refetchPosts }) => {
     <>
       <Card 
         sx={{
-          backgroundColor:'white',
+          backgroundColor: 'white',
           width: 265,
           height: 300,
           borderRadius: '4%',
@@ -84,147 +84,144 @@ const Post = ({ post, refetchPosts }) => {
           </Typography>
         </CardContent>
         {!expanded && (
-<IconButton 
-  className="delete-icon" 
-  onClick={handleDeleteClick} 
-  sx={{ 
-    color: '#FF4F4F',         // Change the color of the icon inside the button
-    position: 'absolute', 
-    top: 8, 
-    right: 8, 
-    opacity: 0, 
-    transition: 'opacity 0.3s ease-in-out',
-    '&:hover': {
-      opacity: 1
-    }
-  }}
->
-  <DeleteRoundedIcon />
-</IconButton>
+          <IconButton 
+            className="delete-icon" 
+            onClick={handleDeleteClick} 
+            sx={{ 
+              color: '#FF4F4F',
+              position: 'absolute', 
+              top: 8, 
+              right: 8, 
+              opacity: 0, 
+              transition: 'opacity 0.3s ease-in-out',
+              '&:hover': {
+                opacity: 1
+              }
+            }}
+          >
+            <DeleteRoundedIcon />
+          </IconButton>
         )}
       </Card>
 
-<Dialog
-  open={expanded}
-  onClose={handleClose}
-  PaperProps={{     sx: {
-      borderRadius: '20px', // Adjust the border-radius here
+      <Dialog
+        open={expanded}
+        onClose={handleClose}
+        PaperProps={{
+          sx: {
+            borderRadius: '20px',
             width: '75%',
-      height:'50%',
-      p: 2,
-      textAlign: 'center',
-    },
-  }}
->
-  <DialogTitle>Edit Post</DialogTitle>
-  <DialogContent>
-    <TextField
-      fullWidth
-      variant="outlined"
-      placeholder='Title'
-      value={editedPost.title}
-      onChange={(e) => setEditedPost(prev => ({ ...prev, title: e.target.value }))} 
-      sx={{ mb: 2 }}
-      disabled={!editing}
-    />
-    <TextField
-      fullWidth
-      variant="outlined"
-      multiline
-      minRows={4}
-      value={editedPost.content}
-      onChange={(e) => setEditedPost(prev => ({ ...prev, content: e.target.value }))} 
+            height: '50%',
+            p: 2,
+            textAlign: 'center',
+          },
+        }}
+      >
+        <DialogTitle>Edit Post</DialogTitle>
+        <DialogContent>
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder='Title'
+            value={editedPost.title}
+            onChange={(e) => setEditedPost(prev => ({ ...prev, title: e.target.value }))} 
+            sx={{ mb: 2 }}
+            disabled={!editing}
+          />
+          <TextField
+            fullWidth
+            variant="outlined"
+            multiline
+            minRows={4}
+            value={editedPost.content}
+            onChange={(e) => setEditedPost(prev => ({ ...prev, content: e.target.value }))} 
             disabled={!editing}
             sx={{
-    '& .MuiOutlinedInput-root': {
-      height: '160px', // Total height including the border
-      '& textarea': {
-
-        height: '100%',  // Ensures the content fills the specified height
-      },
-    },
-  }}
+              '& .MuiOutlinedInput-root': {
+                height: '160px',
+                '& textarea': {
+                  height: '100%',
+                },
+              },
+            }}
           />
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100%', mb: 2, marginTop:'15px' }}>
-      {post.author?.name && (
-        <Typography variant="caption" color="text.secondary">
-          Author: {post.author.name}
-        </Typography>
-      )}
-      <Typography variant="caption" color="text.secondary">
-        Created At: {formatDateTime(post.createdAt)}
-      </Typography>
-      {post.updatedAt && (
-        <Typography variant="caption" color="text.secondary">
-          Updated At: {formatDateTime(post.updatedAt)}
-        </Typography>
-      )}
-      {post.deletedAt && (
-        <Typography variant="caption" color="error">
-          Deleted At: {formatDateTime(post.deletedAt)}
-        </Typography>
-      )}
-    </Box>
-  </DialogContent>
-        <Box sx={{ display: 'flex', justifyContent: 'end', mt: 2, marginRight:'20px' }}>
-            <IconButton onClick={handleSave} disabled={!editing}>
-              <SaveIcon sx={{color: '#BB86FC'}}/>
-            </IconButton>
-            <IconButton onClick={handleDeleteClick} color="error">
-              <DeleteRoundedIcon sx={{color: '#FF4F4F'}}/>
-            </IconButton>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100%', mb: 2, marginTop: '15px' }}>
+            {post.author?.name && (
+              <Typography variant="caption" color="text.secondary">
+                Author: {post.author.name}
+              </Typography>
+            )}
+            <Typography variant="caption" color="text.secondary">
+              Created At: {formatDateTime(post.createdAt)}
+            </Typography>
+            {post.updatedAt && (
+              <Typography variant="caption" color="text.secondary">
+                Updated At: {formatDateTime(post.updatedAt)}
+              </Typography>
+            )}
+            {post.deletedAt && (
+              <Typography variant="caption" color="error">
+                Deleted At: {formatDateTime(post.deletedAt)}
+              </Typography>
+            )}
           </Box>
-</Dialog>
+        </DialogContent>
+        <Box sx={{ display: 'flex', justifyContent: 'end', mt: 2, marginRight: '20px' }}>
+          <IconButton onClick={handleSave} disabled={!editing}>
+            <SaveIcon sx={{ color: '#BB86FC' }}/>
+          </IconButton>
+          <IconButton onClick={handleDeleteClick} color="error">
+            <DeleteRoundedIcon sx={{ color: '#FF4F4F' }}/>
+          </IconButton>
+        </Box>
+      </Dialog>
 
-
-      {/* Delete Confirmation Dialog */}
-<Dialog
-  open={deleteDialogOpen}
-  onClose={handleDeleteCancel}
-  PaperProps={{
-    sx: {
-      borderRadius: '20px', // Adjust the border-radius here
-      width: '18.5%',
-      p: 2,
-      textAlign: 'center',
-    },
-  }}
->
-  <DialogTitle sx={{ fontWeight: 'bold' }}>Are you sure?</DialogTitle>
-  <DialogContent>
-    <Typography variant="body1" sx={{ color: 'gray', mb: -1 }}>
-      Are you sure you want to delete this post? <br/> This action cannot be undone.
-    </Typography>
-  </DialogContent>
-  <DialogActions sx={{ justifyContent: 'center' }}>
-<Button
-  onClick={handleDeleteCancel}
-  variant="outlined"
-  sx={{
-    mr: 2,
-    fontWeight:'bold',
-    borderRadius: 1,
-    p: '8px 25px',
-    color: 'black',         // Sets the font color to black
-    borderColor: 'black',   // Sets the outline (border) color to black
-    '&:hover': {
-      borderColor: 'black', // Ensures the border stays black on hover
-      color: 'black',       // Ensures the font stays black on hover
-    },
-  }}
->
-  Cancel
-</Button>
-    <Button
-      onClick={handleDeleteConfirm}
-      variant="contained"
-      sx={{ backgroundColor: '#FF4F4F', color: 'white', borderRadius: 1, p: '8px 25px', fontWeight: 'bold' }}
-    >
-      Delete
-    </Button>
-  </DialogActions>
-</Dialog>
-
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={handleDeleteCancel}
+        PaperProps={{
+          sx: {
+            borderRadius: '20px',
+            width: '18.5%',
+            p: 2,
+            textAlign: 'center',
+          },
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 'bold' }}>Are you sure?</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" sx={{ color: 'gray', mb: -1 }}>
+            Are you sure you want to delete this post? <br /> This action cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: 'center' }}>
+          <Button
+            onClick={handleDeleteCancel}
+            variant="outlined"
+            sx={{
+              mr: 2,
+              fontWeight: 'bold',
+              borderRadius: 1,
+              p: '8px 25px',
+              color: 'black',
+              borderColor: 'black',
+              '&:hover': {
+                borderColor: 'black',
+                color: 'black',
+              },
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleDeleteConfirm}
+            variant="contained"
+            sx={{ backgroundColor: '#FF4F4F', color: 'white', borderRadius: 1, p: '8px 25px', fontWeight: 'bold' }}
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

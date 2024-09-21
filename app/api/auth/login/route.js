@@ -14,7 +14,7 @@ export async function POST(req) {
     const formData = await req.json();
 
     const ourUser = {
-      email: formData.email || '', // Change name to email
+      email: formData.email || '', 
       password: formData.password || ''
     };
 
@@ -25,9 +25,8 @@ export async function POST(req) {
     ourUser.email = ourUser.email.trim();
     ourUser.password = ourUser.password.trim();
 
-    // Query the user from the database using email
     const user = await prisma.user.findFirst({
-      where: { email: ourUser.email } // Query by email
+      where: { email: ourUser.email } 
     });
 
     if (!user) {

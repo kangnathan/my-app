@@ -4,12 +4,12 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 function isAlphaNumeric(x) {
-  const regex = /^[a-zA-Z0-9\s]*$/; // Allowing spaces within the name
+  const regex = /^[a-zA-Z0-9\s]*$/; 
   return regex.test(x);
 }
 
 function validateEmail(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple email validation regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
 
@@ -23,12 +23,11 @@ export async function POST(req) {
     password: formData.password || ''
   };
 
-  // Trim all inputs to remove extra spaces
   ourUser.name = ourUser.name.trim();
   ourUser.email = ourUser.email.trim();
   ourUser.password = ourUser.password.trim();
 
-  // Validate Username
+  // validate Username
   if (!ourUser.name) {
     errors.name = 'You must provide a username.';
   } else if (ourUser.name.length < 3) {
@@ -39,7 +38,7 @@ export async function POST(req) {
     errors.name = 'Usernames can only contain letters, numbers, and spaces.';
   }
 
-  // Check if the username is already in use
+  // check if the username is already in use
   const usernameInQuestion = await prisma.user.findFirst({
     where: { name: ourUser.name }
   });
@@ -47,13 +46,13 @@ export async function POST(req) {
     errors.name = 'That username is already in use.';
   }
 
-  // Validate Email
+  // validate email
   if (!ourUser.email) {
     errors.email = 'You must provide an email address.';
   } else if (!validateEmail(ourUser.email)) {
     errors.email = 'Please provide a valid email address.';
   } else {
-    // Check if the email is already in use
+    // check if the email is already in use
     const emailInQuestion = await prisma.user.findFirst({
       where: { email: ourUser.email }
     });
@@ -62,7 +61,7 @@ export async function POST(req) {
     }
   }
 
-  // Validate Password
+  // validate password
   if (!ourUser.password) {
     errors.password = 'You must provide a password.';
   } else if (ourUser.password.length < 12) {
@@ -71,12 +70,11 @@ export async function POST(req) {
     errors.password = 'Password cannot exceed 50 characters.';
   }
 
-  // If there are validation errors, return them
   if (Object.keys(errors).length > 0) {
     return NextResponse.json({ errors: errors, success: false }, { status: 400 });
   }
 
-  // Proceed to create the user if validation passes
+  // create the user if validation passes
   try {
     const salt = bcrypt.genSaltSync(10);
     ourUser.password = bcrypt.hashSync(ourUser.password, salt);

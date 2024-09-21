@@ -3,7 +3,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker as MUIDatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Box, TextField, Button } from '@mui/material';
 import { useState } from 'react';
-import AddPostModal from './AddPostModal'; // Ensure the path is correct
+import AddPostModal from './AddPostModal';
 
 export default function DatePicker({
   startDate,
@@ -24,7 +24,7 @@ export default function DatePicker({
   };
 
   const handleClearFilters = () => {
-    console.log("Clearing filters"); // Debugging line
+    console.log("Clearing filters");
     setStartDate(null);
     setEndDate(null);
   };
@@ -40,16 +40,12 @@ export default function DatePicker({
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
-        
-        {/* Date Picker Section */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexGrow: 1, marginRight: '15px' }}>
-          
-          {/* Start Date Picker */}
           <Box sx={{ flex: 1 }}>
             <MUIDatePicker
-              key={startDate ? 'start-date-set' : 'start-date-clear'} // Force re-render on clear
+              key={startDate ? 'start-date-set' : 'start-date-clear'}
               label="Start Date"
-              value={startDate ?? null} // Ensure null is properly handled
+              value={startDate ?? null}
               onChange={handleStartDateChange}
               slots={{
                 textField: (params) => (
@@ -71,13 +67,11 @@ export default function DatePicker({
               }}
             />
           </Box>
-
-          {/* End Date Picker */}
           <Box sx={{ flex: 1 }}>
             <MUIDatePicker
-              key={endDate ? 'end-date-set' : 'end-date-clear'} // Force re-render on clear
+              key={endDate ? 'end-date-set' : 'end-date-clear'}
               label="End Date"
-              value={endDate ?? null} // Ensure null is properly handled
+              value={endDate ?? null}
               onChange={handleEndDateChange}
               slots={{
                 textField: (params) => (
@@ -100,9 +94,7 @@ export default function DatePicker({
             />
           </Box>
         </Box>
-
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          {/* Clear Filters Button */}
           <Button
             variant="contained"
             color="secondary"
@@ -121,8 +113,6 @@ export default function DatePicker({
           >
             Clear
           </Button>
-
-          {/* New Button Section */}
           <Button
             variant="contained"
             onClick={handleOpen}
@@ -133,7 +123,7 @@ export default function DatePicker({
               textTransform: 'none',
               padding: '10px 15px',
               minWidth: '100px',
-              marginLeft: '15px', // Space between buttons
+              marginLeft: '15px',
               '&:hover': {
                 backgroundColor: '#f0f0f0',
               },
@@ -143,8 +133,6 @@ export default function DatePicker({
           </Button>
         </Box>
       </Box>
-
-      {/* AddPostModal */}
       <AddPostModal open={open} onClose={handleClose} userId={user?.id} refetchPosts={fetchPosts} />
     </LocalizationProvider>
   );

@@ -42,7 +42,7 @@ export default function Page() {
       if (response.ok && result.success) {
         setFormState({ success: true, message: 'Login successful!' });
         
-        // Add a 1.5 second delay before navigating
+        // to add a 1.5 second delay before navigating para malupet
         setTimeout(() => {
           router.push("/home");
         }, 1500);
@@ -126,7 +126,6 @@ export default function Page() {
         >
           {loading ? "Logging in..." : "Submit"}
         </Button>
-        {/* Alerts below the button */}
         <Box mt={2}>
           {(formState.success !== null) && (
             <Alert variant="filled" severity={formState.success ? "success" : "warning"}>

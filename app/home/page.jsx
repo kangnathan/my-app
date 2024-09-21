@@ -7,7 +7,6 @@ import DatePicker from '../../components/DatePicker';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import MenuBar from '@/components/MenuBar';
-import dayjs from 'dayjs'; // Import dayjs for formatting
 
 const initialState = {
   user: null,
@@ -26,7 +25,7 @@ function reducer(state, action) {
     case 'SET_POSTS':
       return { ...state, posts: action.payload, loading: false, error: '' };
     case 'SET_DATES':
-      return { ...state, ...action.payload }; // Use destructuring
+      return { ...state, ...action.payload }; 
     case 'SET_LOADING':
       return { ...state, loading: action.payload };
     case 'SET_ERROR':

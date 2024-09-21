@@ -5,10 +5,10 @@ export async function POST(req) {
   try {
     const cookie = cookies().get("mycrudapp");
     if (cookie) {
-      cookies().delete("mycrudapp", { path: '/' }); // Ensure the path matches where the cookie was set
+      cookies().delete("mycrudapp", { path: '/' }); 
     }
 
-    // Redirect to the home page
+    //redirect to logout page
     return NextResponse.redirect(new URL('/', req.url));
   } catch (error) {
     console.error('Error during logout:', error);
