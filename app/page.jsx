@@ -1,46 +1,54 @@
-import prisma from '@/lib/prisma';
-import HomeClient from './components/HomeClient';
-import { formatDateTime } from '@/utils/formatDateTime';
+import HomeClient from "./home/page";
+import RegisterForm from "../components/RegisterForm";
+import { Typography, Box, Divider, Button } from "@mui/material";
+import Link from 'next/link';
 
-// Fetch posts with filtering parameters
-async function getPosts({ startDate, endDate, showDeleted }) {
-  try {
-    const filter = {};
+export default async function Page() {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  const res = await fetch(`${baseUrl}/api/user`);
+  const user = res.ok ? await res.json() : null;
 
-    if (startDate) {
-      filter.createdAt = { ...filter.createdAt, gte: new Date(startDate) };
-    }
-
-    if (endDate) {
-      filter.createdAt = { ...filter.createdAt, lte: new Date(endDate) };
-    }
-
-    if (showDeleted === 'show') {
-      filter.deletedAt = { not: null };
-    } else {
-      filter.deletedAt = null;
-    }
-
-    const posts = await prisma.post.findMany({
-      where: filter,
-      include: { author: { select: { name: true } } },
-    });
-
-    return posts.map(post => ({
-      ...post,
-      authorName: post.author ? post.author.name : 'Unknown',
-      createdAt: formatDateTime(post.createdAt),
-      updatedAt: formatDateTime(post.updatedAt),
-      deletedAt: post.deletedAt ? formatDateTime(post.deletedAt) : null,
-    }));
-  } catch (error) {
-    console.error('Error fetching posts:', error);
-    return [];
-  }
-}
-
-export default async function Home({ searchParams }) {
-  const { startDate, endDate, showDeleted } = searchParams;
-  const posts = await getPosts({ startDate, endDate, showDeleted });
-  return <HomeClient posts={posts} startDate={startDate} endDate={endDate} showDeleted={showDeleted} />;
+  return (
+    <>
+      {user ? (
+        <HomeClient user={user} />
+      ) : (
+        <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ mt: 0 }}>
+          <Box flex={1} textAlign="center" sx={{ backgroundColor: '#202124', color: 'white', p: 2 }}>
+            <Typography variant="h2" sx={{marginBottom:"30px"}}>
+              <strong>Quick<span style={{ color: "#BB86FC" }}>CRUD</span></strong>
+            </Typography>
+            <Typography variant="h5" gutterBottom >
+              Don’t have an account? <strong>Create One</strong>
+            </Typography>
+            <Box display="flex" alignItems="center" justifyContent="center" sx={{ mt: 1 }}>
+              <Typography variant="h6" sx={{ marginRight: 1 }}>or just</Typography>
+              <Link href="/login">
+                <Button
+                  variant="contained"
+                  sx={{ backgroundColor: "#BB86FC", color: "#fff", "&:hover": { backgroundColor: "#9a6cd8" } }}>
+                  Log In
+                </Button>
+              </Link>
+            </Box>
+          </Box>
+          <Box sx={{ height: '909px', display: 'flex', alignItems: 'center', mx: 0 }}>
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{
+                height: '100%',
+                bgcolor: 'black', // Change color to white
+                borderWidth: 2,   // Adjust thickness
+                borderStyle: 'solid', // Make it solid
+              }}
+            />
+          </Box>
+          <Box flex={1} display="flex" justifyContent="center">
+            <RegisterForm />
+          </Box>
+        </Box>
+      )}
+    </>
+  );
 }

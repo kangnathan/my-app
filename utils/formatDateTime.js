@@ -1,7 +1,13 @@
 import { format } from 'date-fns';
 
 export function formatDateTime(dateTime) {
-  const formattedDate = format(dateTime, 'MM/dd/yyyy');
-  const formattedTime = format(dateTime, 'hh:mm a');
+  // Ensure dateTime is a valid Date object
+  const date = new Date(dateTime);
+  if (isNaN(date.getTime())) {
+    return 'Invalid date'; // or handle the error as needed
+  }
+
+  const formattedDate = format(date, 'MM/dd/yyyy');
+  const formattedTime = format(date, 'hh:mm a');
   return `${formattedDate} ${formattedTime}`;
 }
