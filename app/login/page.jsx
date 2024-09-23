@@ -21,7 +21,7 @@ export default function Page() {
     const formData = new FormData(event.currentTarget);
 
     const data = {
-      email: formData.get("email"),
+      emailOrUsername: formData.get("emailOrUsername"),  // Use emailOrUsername instead of email
       password: formData.get("password"),
     };
 
@@ -42,10 +42,10 @@ export default function Page() {
       if (response.ok && result.success) {
         setFormState({ success: true, message: 'Login successful!' });
         
-        // to add a 1.5 second delay before navigating para malupet
+        // Delay before redirecting to /home
         setTimeout(() => {
           router.push("/home");
-        }, 1500);
+        }, 1000);
       } else {
         setFormState({ success: false, message: result.message || 'Login failed.' });
       }
@@ -72,8 +72,8 @@ export default function Page() {
         <Box mb={3}>
           <TextField
             fullWidth
-            name="email"
-            label="Email"
+            name="emailOrUsername"  // Changed the name to emailOrUsername
+            label="Email or Username"  // Updated the label to reflect email or username
             autoComplete="off"
             variant="outlined"
             sx={{

@@ -1,3 +1,25 @@
 html{
     background-color: #202124;
 }
+
+.draggable-post {
+    position: relative;
+    /* Normal layout */
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    /* Smooth transition for opacity and scaling */
+}
+
+.draggable-post.dragging {
+    pointer-events: none;
+    /* Prevent mouse events on the dragged post */
+    z-index: 1000;
+    /* Ensure it stays on top */
+    opacity: 0.7;
+    /* Slightly transparent while dragging */
+}
+
+/* Optional: Add a hover effect on posts */
+.draggable-post:hover {
+    transform: translateY(-5px);
+    /* Slightly lift the post on hover */
+}

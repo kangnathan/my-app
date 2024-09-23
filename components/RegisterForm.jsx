@@ -51,7 +51,7 @@ export default function RegisterForm() {
         setFormState({ success: "Account created successfully!", errors: {} });
         setTimeout(() => {
           router.push("/login");
-        }, 1500);
+        }, 1000);
       } else {
         setFormState({ errors: result.errors || { global: "An error occurred" }, success: null });
       }

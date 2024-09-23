@@ -2,12 +2,13 @@ import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
+import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
 async function authenticateUser() {
     const cookie = cookies().get("mycrudapp");
-    const token = cookie ? cookie.value : null;
+    const token = cookie ? cookie.value : null; 
 
     if (!token) {
         return { success: false, message: 'Unauthorized: No token provided' };
@@ -31,20 +32,67 @@ export async function PUT(req) {
         return NextResponse.json({ message }, { status: 401 });
     }
 
-    const { name } = await req.json();
+    const { name, originalPassword, newPassword } = await req.json();
+    const errors = {};
 
-    if (!name) {
-        return NextResponse.json({ message: 'Name is required' }, { status: 400 });
+    if (!name && !newPassword) {
+        return NextResponse.json({ message: 'Name or password is required' }, { status: 400 });
     }
 
     try {
-        const updatedUser = await prisma.user.update({
+        // fetch the current user
+        const user = await prisma.user.findUnique({
             where: { id: userId },
-            data: { name },
         });
 
-        return NextResponse.json({ message: 'Name updated successfully', user: updatedUser });
+        if (!user) {
+            return NextResponse.json({ message: 'User not found' }, { status: 404 });
+        }
+
+        // validate and change the password
+        if (newPassword) {
+            if (!originalPassword) {
+                return NextResponse.json({ message: 'Original password is required to change the password' }, { status: 400 });
+            }
+
+            // verify the original password
+            const isPasswordCorrect = await bcrypt.compare(originalPassword, user.password);
+            if (!isPasswordCorrect) {
+                return NextResponse.json({ message: 'Incorrect original password' }, { status: 400 });
+            }
+
+            //  same rules as in the registration logic
+            if (newPassword.length < 12) {
+                errors.password = 'Password must be at least 12 characters.';
+            } else if (newPassword.length > 50) {
+                errors.password = 'Password cannot exceed 50 characters.';
+            }
+
+       
+            if (Object.keys(errors).length > 0) {
+                return NextResponse.json({ errors, success: false }, { status: 400 });
+            }
+
+            // hash the new passwordd
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+            // update the password
+            await prisma.user.update({
+                where: { id: userId },
+                data: { password: hashedPassword },
+            });
+        }
+
+        // update the name if provided
+        if (name) {
+            await prisma.user.update({
+                where: { id: userId },
+                data: { name },
+            });
+        }
+
+        return NextResponse.json({ message: 'User updated successfully' });
     } catch (error) {
-        return NextResponse.json({ message: 'Error updating name', error: error.message }, { status: 500 });
+        return NextResponse.json({ message: 'Error updating user', error: error.message }, { status: 500 });
     }
 }

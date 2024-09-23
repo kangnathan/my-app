@@ -7,26 +7,32 @@ import jwt from 'jsonwebtoken';
 export async function POST(req) {
   const failObject = {
     success: false,
-    message: "Invalid email / password."
+    message: "Invalid email/username or password."
   };
 
   try {
     const formData = await req.json();
 
     const ourUser = {
-      email: formData.email || '', 
+      emailOrUsername: formData.emailOrUsername || '',  // Accept email or username
       password: formData.password || ''
     };
 
-    if (typeof ourUser.email !== 'string' || typeof ourUser.password !== 'string' || ourUser.email.trim() === '' || ourUser.password.trim() === '') {
+    if (typeof ourUser.emailOrUsername !== 'string' || typeof ourUser.password !== 'string' || ourUser.emailOrUsername.trim() === '' || ourUser.password.trim() === '') {
       return NextResponse.json(failObject, { status: 400 });
     }
 
-    ourUser.email = ourUser.email.trim();
+    ourUser.emailOrUsername = ourUser.emailOrUsername.trim();
     ourUser.password = ourUser.password.trim();
 
+    // Find user by either email or username without changing schema
     const user = await prisma.user.findFirst({
-      where: { email: ourUser.email } 
+      where: {
+        OR: [
+          { email: ourUser.emailOrUsername },
+          { name: ourUser.emailOrUsername }
+        ]
+      }
     });
 
     if (!user) {
